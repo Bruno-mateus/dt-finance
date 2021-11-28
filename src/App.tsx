@@ -1,26 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Header } from "./components/header";
+import { GlobalStyle } from "./styles/Global";
+import { Dashboard } from "./components/dashboard";
+import Modal from 'react-modal'
+import { useState } from "react";
+import { TransactionModal } from "./components/TransactionModal";
+import {TransactionsProvider, useTransactions} from "./hooks/useTransactions";
 
-function App() {
+export function App() { 
+         // Make sure to bind modal to your appElement (https://reactcommunity.org/react-modal/accessibility/)
+          Modal.setAppElement('#root');
+
+  const [isNewTransactionModalOpen, setIsNewTransactionModalOpen] = useState(false);
+
+  function handleCloseNewTransactionModal(){
+    setIsNewTransactionModalOpen(false)
+  }
+
+  function handleOpenNewTransactionModal(){
+    setIsNewTransactionModalOpen(true)
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  <TransactionsProvider>
+    <Header onOpenNewTransactionModal={handleOpenNewTransactionModal}/>
+    <GlobalStyle/>
+    <Dashboard/>
+    <TransactionModal isOpen={isNewTransactionModalOpen}
+     onRequestClose={handleCloseNewTransactionModal}/>
+  </TransactionsProvider>
+    );
 }
 
-export default App;
+
